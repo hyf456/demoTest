@@ -1,0 +1,45 @@
+package com.han.servlet.lru;
+
+import java.util.*;
+
+/**
+ * @Author: hanyf
+ * @Description: 实现一个LRU
+ * @Date: 2019/5/31 15:57
+ */
+public class LRULinkedMap<K, V> {
+
+    /**
+     * 最大缓存大小
+     */
+    private int cacheSize;
+
+    private LinkedHashMap<K, V> cacheMap;
+
+    public LRULinkedMap(int cacheSize) {
+        this.cacheSize = cacheSize;
+
+        cacheMap = new LinkedHashMap(16, 0.75F, true){
+            @Override
+            protected boolean removeEldestEntry(Map.Entry eldest) {
+                if (cacheSize + 1 == cacheMap.size()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+    }
+
+    public void put(K key, V value) {
+        cacheMap.put(key, value);
+    }
+
+    public V get(K key) {
+        return cacheMap.get(key);
+    }
+
+    public Collection<Map.Entry<K, V>> getAll() {
+        return new ArrayList<Map.Entry<K, V>>(cacheMap.entrySet());
+    }
+}

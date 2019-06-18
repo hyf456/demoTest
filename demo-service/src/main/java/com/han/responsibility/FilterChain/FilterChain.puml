@@ -1,0 +1,31 @@
+@startuml
+
+
+interface Handler {
+-successor Handler
++handleRequest(Request request)
+}
+
+class Client
+
+class ConcreleHandlerA {
+
++handleRequest(Request request)
+}
+
+class ConcreleHandlerB {
+
++handlerRequest(Request request)
+}
+
+Handler <|-- ConcreleHandlerA
+Handler <|-- ConcreleHandlerB
+Client  o--> Handler
+
+note as N1
+    如果用编程语音来表述整个过程，我们会把具体的执行<u>对象角色</u>进行行为抽象，
+    <b><color:royalBlue>得到一个抽象执行对象（Handler）角色</color>，<s>其实实现意图</s>
+    <img:sourceforge.jpg>
+end note
+
+@enduml

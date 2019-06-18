@@ -1,0 +1,35 @@
+@startuml
+
+class FilterChain {
++filter: List<Filter>
++doFilter(Request, Response): void
+}
+
+interface Filter {
+
++doFilter(Request, Response, FilterChain): void
+}
+
+class Request
+
+class Response
+
+class HtmlFilter
+
+class SensitiveFilter
+
+FilterChain "1" o--> "*" Filter
+
+Filter ..> Request
+
+Filter ..> Response
+
+HtmlFilter ..|> Filter
+
+SensitiveFilter ..|> Filter
+
+note as 注释
+程序模拟JavaWeb中的过滤器，
+实现类似于对Request和Response的过滤。
+end note
+@enduml

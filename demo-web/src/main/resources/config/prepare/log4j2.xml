@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" packages="com.weidian.open.log.tps">
+	<Properties>
+		<Property name="base.dir">/data/logs/hivescm-oms-web</Property>
+		<!-- 		<Property name="pattern">requestTime:%d|%p|%l %m%n</Property> -->
+		<Property name="pattern">requestTime:%d|%p|traceID:$${ctx:traceID}|SERVER_IP:$${ctx:SERVER_IP}|PROJECT_NAME:$${ctx:PROJECT_NAME}|USER_IP:$${ctx:USER_IP} %l |%m%n</Property>
+	</Properties>
+	<Appenders>
+		<!--这个输出控制台的配置，这里输出除了WARN和ERROR级别的信息到System.out -->
+		<Console name="console_out_appender" target="SYSTEM_OUT">
+
+			<ThresholdFilter level="TRACE"  />
+			<!-- 控制台只输出level及以上级别的信息(onMatch),其他的直接拒绝(onMismatch) .
+            <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY" />
+             -->
+			<PatternLayout pattern="${pattern}" />
+		</Console>
+
+		<!-- 这个输出控制台的配置，这里输出ERROR级别的信息到System.err，在eclipse控制台上看到的是红色文字 -->
+		<Console name="console_err_appender" target="SYSTEM_ERR">
+			<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${pattern}" />
+		</Console>
+		<!-- root日志 -->
+		<RollingFile name="rootAppender" fileName="${base.dir}/root.log" filePattern="${base.dir}/root_1.log">
+			<PatternLayout>
+				<pattern>${pattern}</pattern>
+			</PatternLayout>
+			<Filters>
+				<ThresholdFilter level="TRACE"/>
+			</Filters>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="1G" />
+			</Policies>
+		</RollingFile>
+		<!-- debugAppender -->
+		<RollingFile name="debugAppender" fileName="${base.dir}/debug.log" filePattern="${base.dir}/debug_.%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>${pattern}</pattern>
+			</PatternLayout>
+			<Filters>
+				<ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>
+				<ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB" />
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+			</Policies>
+		</RollingFile>
+		<!-- INFO日志 -->
+		<RollingFile name="infoAppender" fileName="${base.dir}/info.log" filePattern="${base.dir}/info_.%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>${pattern}</pattern>
+			</PatternLayout>
+			<Filters>
+				<ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB" />
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+			</Policies>
+		</RollingFile>
+		<!-- WARN日志 -->
+		<RollingFile name="warnAppender" fileName="${base.dir}/warn.log" filePattern="${base.dir}/warn_.%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>${pattern}</pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+			<Filters>
+				<ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+				<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+		</RollingFile>
+		<!-- 错误日志 -->
+		<RollingFile name="errorAppender" fileName="${base.dir}/error.log" filePattern="${base.dir}/error_.%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>${pattern}</pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB" />
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+			</Policies>
+			<Filters>
+				<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+
+		<!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
+		<Logger name="org.springframework" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+		<Logger name="org.springframework.boot" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+		<Logger name="org.springframework.cloud" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+
+		<Logger name="org.apache" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+		<Logger name="com.netflix" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+		<Logger name="org.hibernate" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+		<Logger name="com.mogujie" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+
+		<Logger name="com.fw" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+		<Logger name="org.quartz.core" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+
+		<Logger name="com.zaxxer.hikari" level="WARN" additivity="false">
+			<AppenderRef ref="warnAppender" />
+			<AppenderRef ref="console_out_appender"/>
+		</Logger>
+		<!-- 异常日志 -->
+		<Logger name="com.hivescm.common.exception.DefaultExceptionHandler" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+		<Logger name="com.hivescm" level="ERROR" additivity="true">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+		<Logger name="com.hivescm.tsharding" level="DEBUG" additivity="false">
+			<!--<AppenderRef ref="rootAppender" />-->
+			<!--<AppenderRef ref="debugAppender" />-->
+			<AppenderRef ref="infoAppender" />
+			<!--<AppenderRef ref="warnAppender" />-->
+			<AppenderRef ref="errorAppender"/>
+			<AppenderRef ref="console_out_appender"/>
+		</Logger>
+		<Logger name="org.elasticsearch" level="ERROR" additivity="false">
+			<AppenderRef ref="errorAppender" />
+			<AppenderRef ref="console_err_appender"/>
+		</Logger>
+		<!-- common日志，设置为INFO级别，只打印到INFO日志中，为了查看服务的列表,正式环境不需要可以提高到ERROR级别 -->
+		<Logger name="com.hivescm.common" level="INFO" additivity="false">
+			<AppenderRef ref="infoAppender" />
+		</Logger>
+		<!-- 本项目的所有打印日志根据级别进入不同日志文件 -->
+		<Logger name="com.hivescm.oms" level="INFO" additivity="false">
+			<AppenderRef ref="console_out_appender"/>
+			<AppenderRef ref="console_err_appender"/>
+			<!--<AppenderRef ref="rootAppender" />-->
+			<!--<AppenderRef ref="debugAppender" />-->
+			<AppenderRef ref="infoAppender" />
+			<!--<AppenderRef ref="warnAppender" />-->
+			<AppenderRef ref="errorAppender"/>
+		</Logger>
+		<!-- sql相关，mybatis级别为DEBUG是，会打印出session相关日志，正式环境需要替换到INFO或ERROR级别 -->
+		<Logger name="org.mybatis" level="INFO" additivity="false">
+			<AppenderRef ref="console_out_appender"/>
+			<AppenderRef ref="console_err_appender"/>
+			<!--<AppenderRef ref="rootAppender" />-->
+			<AppenderRef ref="infoAppender" />
+		</Logger>
+		<!-- sql语句打印日志，TRACE级别会打印出查询结果，DEBUG级别只会打印查询sql和查询条件，不会打印具体查询结果，正式环境替换成INFO或ERROR级别 -->
+		<Logger name="com.hivescm.oms.dao" level="TRACE" additivity="false">
+			<AppenderRef ref="console_out_appender"/>
+			<AppenderRef ref="console_err_appender"/>
+			<AppenderRef ref="rootAppender" />
+			<!--<AppenderRef ref="debugAppender" />-->
+		</Logger>
+		<!-- default log -->
+		<Root level="INFO">
+			<AppenderRef ref="console_out_appender"/>
+			<AppenderRef ref="console_err_appender"/>
+			<!--<AppenderRef ref="rootAppender" />-->
+			<!--<AppenderRef ref="warnAppender" />-->
+			<AppenderRef ref="errorAppender"/>
+			<AppenderRef ref="infoAppender" />
+		</Root>
+	</Loggers>
+</Configuration>
