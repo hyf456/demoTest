@@ -1,0 +1,36 @@
+## 获取需要拦截的路由
+POST {{url}}/route/intercept/get/yestae-login-server
+Accept: application/json
+Content-Type: application/json
+Cache-Control: no-cache
+
+
+###
+## 添加拦截路由
+POST /route/intercept/add HTTP/1.1
+Host: {{url}}
+Content-Type: application/json
+Cache-Control: no-cache
+
+{"routeName":"yestae-login-server,yestae-login,yestae-1,yestae-2"}
+
+###
+## 删除所有拦截路由
+DELETE {{url}}/route/intercept/delAll
+Accept: application/json
+Content-Type: application/json
+Cache-Control: no-cache
+
+###
+## 删除特定拦截路由
+DELETE {{url}}/route/intercept/del/yestae-login-server
+Accept: application/json
+Content-Type: application/json
+Cache-Control: no-cache
+
+###
+## 获取所有拦截的路由
+POST {{url}}/route/intercept/getAll
+Accept: application/json
+Content-Type: application/json
+Cache-Control: no-cache

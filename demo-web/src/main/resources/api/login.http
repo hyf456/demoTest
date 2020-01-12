@@ -1,0 +1,34 @@
+### 登录获取用户信息
+POST {{url}}/base-user-service/login/login
+Content-Type: application/json
+
+{
+  "userName":"hanyf",
+  "password":"oms1234"
+}
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.body.code === 0, "result code is not 0");
+  client.assert(response.body.result !== null, "result is null");
+  client.assert(response.body.result.dataIdMap !== null, "dataIdMap is null");
+  client.assert(response.body.result.dataIdMap['company_dimension'] !== null, "company_dimension is null");
+  client.assert(response.body.result.dataIdMap['shop_dimension'] !== null, "shop_dimension is null");
+  client.assert(response.body.result.dataIdMap['warehouse_dimension'] !== null, "warehouse_dimension is null");
+  client.assert(response.body.result.dataListMap !== null, "dataListMap is null");
+  client.assert(response.body.result.dataListMap['company_dimension'] !== null, "company_dimension is null");
+  client.assert(response.body.result.dataListMap['shop_dimension'] !== null, "shop_dimension is null");
+  client.assert(response.body.result.dataListMap['warehouse_dimension'] !== null, "warehouse_dimension is null");
+});
+client.global.set("userId", response.body.result.id);
+client.global.set("token", response.body.result.token);
+client.global.set("companyId", response.body.result.dataIdMap['company_dimension'][0]);
+client.global.set("shopId", response.body.result.dataIdMap['shop_dimension'][0]);
+client.global.set("warehouseId", response.body.result.dataIdMap['warehouse_dimension'][0]);
+client.global.set("companyName", encodeURIComponent(response.body.result.dataListMap['company_dimension'][0].name));
+client.global.set("shopName", encodeURIComponent(response.body.result.dataListMap['shop_dimension'][0].name));
+client.global.set("warehouseName", encodeURIComponent(response.body.result.dataListMap['warehouse_dimension'][0].name));
+%}
+
+###
+
