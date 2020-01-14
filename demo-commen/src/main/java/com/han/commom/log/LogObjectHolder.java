@@ -1,6 +1,6 @@
 package com.yestae.base.user.service.log;
 
-import com.yestae.base.user.model.util.SpringContextHolder;
+import com.han.commom.util.SpringContextHolder;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;

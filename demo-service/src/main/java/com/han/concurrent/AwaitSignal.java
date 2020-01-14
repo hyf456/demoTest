@@ -27,14 +27,14 @@ public class AwaitSignal {
             lock.lock();
             try {
                 while (!flag) {
-                    System.out.println(Thread.currentThread().getName() + "µ±Ç°Ìõ¼ş²»Âú×ãµÈ´ı");
+                    System.out.println(Thread.currentThread().getName() + "å½“å‰æ¡ä»¶ä¸æ»¡è¶³ç­‰å¾…");
                     try {
                         condition.await();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                System.out.println(Thread.currentThread().getName() + "½ÓÊÕµ½Í¨ÖªÌõ¼şÂú×ã");
+                System.out.println(Thread.currentThread().getName() + "æ¥æ”¶åˆ°é€šçŸ¥æ¡ä»¶æ»¡è¶³");
             } finally {
                 lock.unlock();
             }
