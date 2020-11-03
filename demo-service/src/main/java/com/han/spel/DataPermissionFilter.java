@@ -52,7 +52,7 @@ public class DataPermissionFilter {
 		// //取id为abc的bean，然后调用其中的substring方法
 		// String value2 = parser.parseExpression("#name").getValue(ctx, String.class);
 		// System.out.println(value2);
-		test17_4();
+		test17_3();
 		// test26();
 		// test213();
 
@@ -234,12 +234,13 @@ public class DataPermissionFilter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		user.setMap(stringObjectMap);
 		EvaluationContext context = new StandardEvaluationContext();
 		//添加变量以方便表达式访问
-		context.setVariable("map", stringObjectMap);
+		context.setVariable("map", user);
 		//设置第一个元素的值为1
-		parser.parseExpression("#map['userName']").setValue(context, 1);
-		System.out.println(parser.parseExpression("#map['userName']").getValue(context));
+		parser.parseExpression("#p0.map['userName']").setValue(context, 1);
+		System.out.println(parser.parseExpression("#p0.map['userName']").getValue(context));
 		System.out.println(s);
 		System.out.println(stringObjectMap.toString());
 	}

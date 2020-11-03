@@ -1,7 +1,6 @@
 package com.han.commom.util;
 
 
-import com.yestae.base.user.model.exception.ToolBoxException;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -803,7 +802,7 @@ public class CollectionKit {
 					case "double":
 						return Arrays.toString((double[]) obj);
 					default:
-						throw new ToolBoxException(e);
+						throw new RuntimeException(e);
 				}
 			}
 		}

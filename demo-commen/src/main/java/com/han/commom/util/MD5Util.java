@@ -1,4 +1,4 @@
-package com.yestae.base.user.service.util;
+package com.han.commom.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

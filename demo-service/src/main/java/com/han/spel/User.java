@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Accessors(chain = true)
@@ -20,4 +21,5 @@ public class User implements Serializable {
     private List<User> children;
     private BigDecimal money;
     private AdvanceSearchVO goodsSearchAdvance;
+    private Map<String, Object> map;
 }
