@@ -2,8 +2,6 @@ package com.han.http;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.yestae.framework.rabbit.model.QueueMessage;
-import com.yestae.mall.actuator.vo.SendOrderVO;
 
 import java.io.*;
 import java.util.HashMap;
@@ -42,100 +40,100 @@ public class test {
     /**
      * 从日志中检出发货对象
      */
-    static void test() {
-        try {
-
-            //需要写入的文件的路径
-            // String filePath = "C:\\Users\\shiliang\\Desktop\\发货失败_Message_JSON.json";
-            String filePath = "C:\\Users\\shiliang\\Desktop\\发货失败_SendOrderVO_JSON.json";
-            File file1 = new File(filePath);
-            FileOutputStream fos = null;
-            if (!file1.exists()) {
-                file1.createNewFile();//如果文件不存在，就创建该文件
-                fos = new FileOutputStream(file1);//首次写入获取
-            } else {
-                //如果文件已存在，那么就在文件末尾追加写入
-                fos = new FileOutputStream(file1, true);//这里构造方法多了一个参数true,表示在文件末尾追加写入
-            }
-
-            OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");//指定以UTF-8格式写入文件
-
-            // 文件编码
-            String encoding = "utf-8";
-
-            // 缓冲区大小
-            int inputBufferSize = 10 * 1024 * 1024;
-
-
-            long start = System.currentTimeMillis();
-            // 被搜索的文本
-            //String [] textToFind = {"1195269991111208961","1195269860609634306","1195246027999686658"};
-            String[] textToFind = {"process(61)|发货:SendOrderVO"};
-
-            //String [] textToFind = {"700580641688476236"};
-
-            // 被搜索的文件
-            // String filepath = "C:\\Users\\shiliang\\Desktop\\LOG\\oms-mall-actuator-644b8c7559-njz82\\root.log";
-            String filepath = "C:\\Users\\shiliang\\Desktop\\LOG\\oms-mall-actuator-644b8c7559-qplv7\\root.log";
-            //String filepath = "C:\\Users\\shiliang\\Desktop\\root.log";
-
-
-            File file = new File(filepath);
-            BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, encoding), inputBufferSize);
-
-            Long countLine = 0L;
-
-            String line = "";
-            System.out.println("======开始=====");
-            HashMap<String, String> stringStringHashMap = new HashMap<>();
-            while ((line = reader.readLine()) != null) {
-                countLine++;
-                for (String string : textToFind) {
-                    boolean contains = line.contains(string);
-                    if (contains) {
-                        for (String string2 : textToFind2) {
-                            boolean contains2 = line.contains(string2);
-                            if (contains2) {
-
-                                /**
-                                 * 检查此 sendOrderVO 字段是否符合标准
-                                 */
-                                String s = subString(line);
-                                SendOrderVO object = (SendOrderVO)getObject(s, SendOrderVO.class);
-                                if (null == stringStringHashMap.get(object.getPlatOrderNo())) {
-
-                                    // 创建队列消息
-                                    QueueMessage<SendOrderVO> message = new QueueMessage <>();
-                                    // 设置消息类型(建议各系统创建枚举，便于统一管理)
-                                    message.setType(1);
-                                    // 设置消息载荷
-                                    message.setContent(object);
-
-                                    // osw.write(JSONObject.toJSONString(message));
-
-                                    osw.write(JSONObject.toJSONString(object));
-                                    osw.write("\n");
-                                    post(JSONObject.toJSONString(object));
-                                    stringStringHashMap.put(object.getPlatOrderNo(), "0");
-                                }
-
-                            }
-                        }
-
-                    }
-                }
-
-            }
-            System.out.println("======结束=====");
-
-            //写入完成关闭流
-            osw.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    // static void test() {
+    //     try {
+    //
+    //         //需要写入的文件的路径
+    //         // String filePath = "C:\\Users\\shiliang\\Desktop\\发货失败_Message_JSON.json";
+    //         String filePath = "C:\\Users\\shiliang\\Desktop\\发货失败_SendOrderVO_JSON.json";
+    //         File file1 = new File(filePath);
+    //         FileOutputStream fos = null;
+    //         if (!file1.exists()) {
+    //             file1.createNewFile();//如果文件不存在，就创建该文件
+    //             fos = new FileOutputStream(file1);//首次写入获取
+    //         } else {
+    //             //如果文件已存在，那么就在文件末尾追加写入
+    //             fos = new FileOutputStream(file1, true);//这里构造方法多了一个参数true,表示在文件末尾追加写入
+    //         }
+    //
+    //         OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");//指定以UTF-8格式写入文件
+    //
+    //         // 文件编码
+    //         String encoding = "utf-8";
+    //
+    //         // 缓冲区大小
+    //         int inputBufferSize = 10 * 1024 * 1024;
+    //
+    //
+    //         long start = System.currentTimeMillis();
+    //         // 被搜索的文本
+    //         //String [] textToFind = {"1195269991111208961","1195269860609634306","1195246027999686658"};
+    //         String[] textToFind = {"process(61)|发货:SendOrderVO"};
+    //
+    //         //String [] textToFind = {"700580641688476236"};
+    //
+    //         // 被搜索的文件
+    //         // String filepath = "C:\\Users\\shiliang\\Desktop\\LOG\\oms-mall-actuator-644b8c7559-njz82\\root.log";
+    //         String filepath = "C:\\Users\\shiliang\\Desktop\\LOG\\oms-mall-actuator-644b8c7559-qplv7\\root.log";
+    //         //String filepath = "C:\\Users\\shiliang\\Desktop\\root.log";
+    //
+    //
+    //         File file = new File(filepath);
+    //         BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
+    //         BufferedReader reader = new BufferedReader(new InputStreamReader(fis, encoding), inputBufferSize);
+    //
+    //         Long countLine = 0L;
+    //
+    //         String line = "";
+    //         System.out.println("======开始=====");
+    //         HashMap<String, String> stringStringHashMap = new HashMap<>();
+    //         while ((line = reader.readLine()) != null) {
+    //             countLine++;
+    //             for (String string : textToFind) {
+    //                 boolean contains = line.contains(string);
+    //                 if (contains) {
+    //                     for (String string2 : textToFind2) {
+    //                         boolean contains2 = line.contains(string2);
+    //                         if (contains2) {
+    //
+    //                             /**
+    //                              * 检查此 sendOrderVO 字段是否符合标准
+    //                              */
+    //                             String s = subString(line);
+    //                             SendOrderVO object = (SendOrderVO)getObject(s, SendOrderVO.class);
+    //                             if (null == stringStringHashMap.get(object.getPlatOrderNo())) {
+    //
+    //                                 // 创建队列消息
+    //                                 QueueMessage<SendOrderVO> message = new QueueMessage <>();
+    //                                 // 设置消息类型(建议各系统创建枚举，便于统一管理)
+    //                                 message.setType(1);
+    //                                 // 设置消息载荷
+    //                                 message.setContent(object);
+    //
+    //                                 // osw.write(JSONObject.toJSONString(message));
+    //
+    //                                 osw.write(JSONObject.toJSONString(object));
+    //                                 osw.write("\n");
+    //                                 post(JSONObject.toJSONString(object));
+    //                                 stringStringHashMap.put(object.getPlatOrderNo(), "0");
+    //                             }
+    //
+    //                         }
+    //                     }
+    //
+    //                 }
+    //             }
+    //
+    //         }
+    //         System.out.println("======结束=====");
+    //
+    //         //写入完成关闭流
+    //         osw.close();
+    //
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     /**
      * 访问 feign 接口
