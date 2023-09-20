@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * @Description TODO
+ * @Description Map转换序列化
  * @Date 2019/7/30 10:27
  * @Author hanyf
  */

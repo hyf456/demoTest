@@ -1,5 +1,6 @@
 package com.han.commom.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,7 @@ import java.util.function.Supplier;
 
 /**
  * @ClassName JsonUtils
- * @Description TODO
+ * @Description ObjectMapper序列化
  * @Author hanyunfei1
  * @Date 2021/5/13 18:49
  * @Version 1.0
@@ -44,6 +46,16 @@ public class JsonUtils {
 		mapper.configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
 		// 允许字符串中存在回车换行控制符
 		mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+		/**
+		 * 通过该方法对mapper对象进行设置，所有序列化的对象都将按改规则进行系列化
+		 * Include.Include.ALWAYS 默认
+		 * Include.NON_DEFAULT 属性为默认值不序列化
+		 * Include.NON_EMPTY 属性为 空（“”） 或者为 NULL 都不序列化
+		 * Include.NON_NULL 属性为NULL 不序列化
+		 */
+		// 属性为空不序列化
+		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 	}
 
 	public static String toJSONString(Object obj) {

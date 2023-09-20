@@ -1,16 +1,16 @@
 package com.han.commom.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @Description 线程池工具类
  * @Date 2019/7/30 11:38
  * @Author hanyf
  */
+@Slf4j
 public class ThreadPoolUtils {
 
 	/*
@@ -73,5 +73,24 @@ public class ThreadPoolUtils {
 	public static ThreadPoolExecutor getThreadPoolExecutor() {
 		ThreadPoolExecutor poolExecutor = threadPoolInstance();
 		return poolExecutor;
+	}
+
+	public static void aa() {
+		ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+		int orderContrastFrequency = 10;
+		int orderContrastScheduledDelayTime = 5;
+
+		executor.scheduleAtFixedRate(() -> {
+			// 以原子方式将当前值递增1并在递增后返回新值。它相当于i ++操作。
+			int orderContrastSize = 1;
+			log.info("订单对比当前已执行第[{}]次", orderContrastSize);
+			if (orderContrastSize > orderContrastFrequency) {
+				log.info("订单对比当前已执行第[{}]次，结束执行", orderContrastSize);
+				executor.shutdown();
+			}
+			orderContrastSize++;
+			//等待 orderContrastScheduledDelayTime 秒后继续执行
+		}, orderContrastScheduledDelayTime, orderContrastScheduledDelayTime, TimeUnit.SECONDS);
 	}
 }
