@@ -19,6 +19,63 @@ public class MapConvertorUtil {
 
 
 	/**
+	 * 将泛型对象转换为Map。
+	 *
+	 * @param obj 需要转换的对象
+	 * @return 包含对象属性和值的Map
+	 * @throws Exception 如果转换过程中发生错误
+	 */
+	public static Map<String, Object> convertToMap(Object obj) throws Exception {
+		if (obj == null) {
+			return null;
+		}
+		return objectMapper.convertValue(obj, Map.class);
+	}
+
+	public static void main(String[] args) {
+		try {
+			// 示例对象
+			Person person = new Person("John", 30);
+
+			// 将对象转换为Map
+			Map<String, Object> personMap = convertToMap(person);
+
+			// 打印Map
+			System.out.println(personMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+// 示例类
+class Person {
+	private String name;
+	private int age;
+
+	public Person(String name, int age) {
+		this.name = name;
+		this.age = age;
+	}
+
+	// Getter和Setter方法
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	/**
 	 * @Author hanyf
 	 * @Description 对象转 map
 	 * @Date 10:29 2019/7/30
